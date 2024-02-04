@@ -9,7 +9,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from src.conf.config import config as app_config
+from src.database.db import DB_URL
 from src.entity.models import Base
 
 # this is the Alembic Config object, which provides
@@ -27,7 +27,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 
 target_metadata = Base.metadata
-config.set_main_option("sqlalchemy.url", app_config.DB_URL)
+config.set_main_option("sqlalchemy.url", DB_URL)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

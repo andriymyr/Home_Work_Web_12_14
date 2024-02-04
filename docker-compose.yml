@@ -5,7 +5,7 @@ services:
     ports:
       - "6379:6379"
   postgres:
-    image: postgres:home_work
+    image: postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}

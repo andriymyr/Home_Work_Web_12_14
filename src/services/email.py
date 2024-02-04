@@ -5,14 +5,20 @@ from fastapi_mail.errors import ConnectionErrors
 from pydantic import EmailStr
 
 from src.services.auth import auth_service
-from src.conf.config import config
+from src.database.db import (
+    MAIL_FROM,
+    MAIL_PASSWORD,
+    MAIL_PORT,
+    MAIL_SERVER,
+    MAIL_USERNAME,
+)
 
 conf = ConnectionConfig(
-    MAIL_USERNAME=config.MAIL_USERNAME,
-    MAIL_PASSWORD=config.MAIL_PASSWORD,
-    MAIL_FROM=config.MAIL_USERNAME,
-    MAIL_PORT=config.MAIL_PORT,
-    MAIL_SERVER=config.MAIL_SERVER,
+    MAIL_USERNAME=MAIL_USERNAME,
+    MAIL_PASSWORD=MAIL_PASSWORD,
+    MAIL_FROM=MAIL_USERNAME,
+    MAIL_PORT=MAIL_PORT,
+    MAIL_SERVER=MAIL_SERVER,
     MAIL_FROM_NAME="TODO Systems",
     MAIL_STARTTLS=False,
     MAIL_SSL_TLS=True,

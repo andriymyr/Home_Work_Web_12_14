@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 import redis
+
+# import aioredis
 from fastapi import Depends, HTTPException, status
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
@@ -11,18 +13,24 @@ from jose import JWTError, jwt
 
 from src.database.db import get_db
 from src.repository import users as repository_users
-from src.conf.config import config
+from src.database.db import (
+    REDIS_DOMAIN,
+    REDIS_PASSWORD,
+    REDIS_PORT,
+    SECRET_KEY_JWT,
+    ALGORITHM,
+)
 
 
 class Auth:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    SECRET_KEY = config.SECRET_KEY_JWT
-    ALGORITHM = config.ALGORITHM
+    SECRET_KEY = SECRET_KEY_JWT
+    ALGORITHM = ALGORITHM
     cache = redis.Redis(
-        host=config.REDIS_DOMAIN,
-        port=config.REDIS_PORT,
+        host=REDIS_DOMAIN,
+        port=REDIS_PORT,
         db=0,
-        password=config.REDIS_PASSWORD,
+        password=REDIS_PASSWORD,
     )
 
     def verify_password(self, plain_password, hashed_password):

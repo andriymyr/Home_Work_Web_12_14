@@ -19,14 +19,14 @@ from src.database.db import get_db
 from src.entity.models import User
 from src.schemas.user import UserResponse
 from src.services.auth import auth_service
-from src.conf.config import config
+from src.database.db import CLD_NAME, CLD_API_KEY,CLD_API_SECRET
 from src.repository import users as repositories_users
 
 router = APIRouter(prefix="/users", tags=["users"])
 cloudinary.config(
-    cloud_name=config.CLD_NAME,
-    api_key=config.CLD_API_KEY,
-    api_secret=config.CLD_API_SECRET,
+    cloud_name=CLD_NAME,
+    api_key=CLD_API_KEY,
+    api_secret=CLD_API_SECRET,
     secure=True,
 )
 

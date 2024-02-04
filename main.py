@@ -15,7 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.db import get_db
 from src.routes import todos, auth, users
-from src.conf.config import config
+from src.database.db import REDIS_DOMAIN, REDIS_PASSWORD, REDIS_PORT
 
 app = FastAPI()
 banned_ips = [
@@ -71,10 +71,10 @@ app.include_router(todos.router, prefix="/api")
 @app.on_event("startup")
 async def startup():
     r = await redis.Redis(
-        host=config.REDIS_DOMAIN,
-        port=config.REDIS_PORT,
+        host=REDIS_DOMAIN,
+        port=REDIS_PORT,
         db=0,
-        password=config.REDIS_PASSWORD,
+        password=REDIS_PASSWORD,
     )
     await FastAPILimiter.init(r)
 
@@ -82,10 +82,10 @@ async def startup():
 templates = Jinja2Templates(directory=BASE_DIR / "src" / "templates")
 
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse) #wwwww
 def index(request: Request):
     return templates.TemplateResponse(
-        "index.html", {"request": request, "our": "Build group WebPython #16"}
+        "index.html", {"request": request, "our": "Build AndriyMyr # 17"}
     )
 
 
