@@ -20,6 +20,15 @@ async def get_todos(
     db: AsyncSession = Depends(get_db),
     user: User = Depends(auth_service.get_current_user),
 ):
+    """
+    Get a list of todos for the authenticated user.
+
+    :param limit: int: Limit the number of todos returned (default 10, min 10, max 500).
+    :param offset: int: Skip the first n results (default 0).
+    :param db: AsyncSession: Database session.
+    :param user: User: Authenticated user.
+    :return: List of todo objects.
+    """
     todos = await repositories_todos.get_todos(limit, offset, db, user)
     return todos
 
@@ -35,6 +44,15 @@ async def get_all_todos(
     db: AsyncSession = Depends(get_db),
     user: User = Depends(auth_service.get_current_user),
 ):
+    """
+    Get a list of all todos (admin/moderator only).
+
+    :param limit: int: Limit the number of todos returned (default 10, min 10, max 500).
+    :param offset: int: Skip the first n results (default 0).
+    :param db: AsyncSession: Database session.
+    :param user: User: Authenticated user.
+    :return: List of todo objects.
+    """
     todos = await repositories_todos.get_all_todos(limit, offset, db)
     return todos
 
@@ -45,6 +63,14 @@ async def get_todo(
     db: AsyncSession = Depends(get_db),
     user: User = Depends(auth_service.get_current_user),
 ):
+    """
+    Get a todo by ID.
+
+    :param todo_id: int: ID of the todo to retrieve (must be greater than or equal to 1).
+    :param db: AsyncSession: Database session.
+    :param user: User: Authenticated user.
+    :return: Todo object.
+    """
     todo = await repositories_todos.get_todo(todo_id, db, user)
     if todo is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="NOT FOUND")
@@ -57,6 +83,14 @@ async def create_todo(
     db: AsyncSession = Depends(get_db),
     user: User = Depends(auth_service.get_current_user),
 ):
+    """
+    Create a new todo.
+
+    :param body: TodoSchema: Request body containing todo information.
+    :param db: AsyncSession: Database session.
+    :param user: User: Authenticated user.
+    :return: Created todo object.
+    """
     todo = await repositories_todos.create_todo(body, db, user)
     return todo
 
@@ -68,6 +102,15 @@ async def update_todo(
     db: AsyncSession = Depends(get_db),
     user: User = Depends(auth_service.get_current_user),
 ):
+    """
+    Update a todo by ID.
+
+    :param body: TodoUpdateSchema: Request body containing updated todo information.
+    :param todo_id: int: ID of the todo to update (must be greater than or equal to 1).
+    :param db: AsyncSession: Database session.
+    :param user: User: Authenticated user.
+    :return: Updated todo object.
+    """
     todo = await repositories_todos.update_todo(todo_id, body, db, user)
     if todo is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="NOT FOUND")
@@ -80,5 +123,13 @@ async def delete_todo(
     db: AsyncSession = Depends(get_db),
     user: User = Depends(auth_service.get_current_user),
 ):
+    """
+    Delete a todo by ID.
+
+    :param todo_id: int: ID of the todo to delete (must be greater than or equal to 1).
+    :param db: AsyncSession: Database session.
+    :param user: User: Authenticated user.
+    :return: None.
+    """
     todo = await repositories_todos.delete_todo(todo_id, db, user)
     return todo

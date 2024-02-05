@@ -34,6 +34,19 @@ async def signup(
     request: Request,
     db: AsyncSession = Depends(get_db),
 ):
+    """
+    The signup function creates a new user in the database.
+        It takes in a UserSchema object, which is validated by pydantic.
+        If the email already exists, it raises an HTTPException with status code 409 (Conflict).
+        Otherwise, it hashes the password and creates a new user using create_user from repositories/users.py.
+
+    :param body: UserSchema: Validate the request body
+    :param bt: BackgroundTasks: Add a task to the background tasks queue
+    :param request: Request: Get the base url of the application
+    :param db: AsyncSession: Get the database session
+    :return: A user object
+    :doc-author: Trelent
+    """
     exist_user = await repositories_users.get_user_by_email(body.email, db)
     if exist_user:
         raise HTTPException(
@@ -49,6 +62,13 @@ async def signup(
 async def login(
     body: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)
 ):
+    """
+    Authenticate and login a user.
+
+    :param body: OAuth2PasswordRequestForm: Form containing username and password.
+    :param db: AsyncSession: Database session.
+    :return: Token information.
+    """
     user = await repositories_users.get_user_by_email(body.username, db)
     if user is None:
         raise HTTPException(
@@ -80,6 +100,13 @@ async def refresh_token(
     credentials: HTTPAuthorizationCredentials = Depends(get_refresh_token),
     db: AsyncSession = Depends(get_db),
 ):
+    """
+    Refresh the access token.
+
+    :param credentials: HTTPAuthorizationCredentials: Credentials containing refresh token.
+    :param db: AsyncSession: Database session.
+    :return: Refreshed token information.
+    """
     token = credentials.credentials
     email = await auth_service.decode_refresh_token(token)
     user = await repositories_users.get_user_by_email(email, db)
@@ -101,6 +128,13 @@ async def refresh_token(
 
 @router.get("/confirmed_email/{token}")
 async def confirmed_email(token: str, db: AsyncSession = Depends(get_db)):
+    """
+    Confirm the email for a user using a verification token.
+
+    :param token: str: Verification token.
+    :param db: AsyncSession: Database session.
+    :return: Confirmation status.
+    """
     email = await auth_service.get_email_from_token(token)
     user = await repositories_users.get_user_by_email(email, db)
     if user is None:
@@ -120,6 +154,15 @@ async def request_email(
     request: Request,
     db: AsyncSession = Depends(get_db),
 ):
+    """
+    Request confirmation email for a user.
+
+    :param body: RequestEmail: Request body containing user email.
+    :param background_tasks: BackgroundTasks: Background tasks to execute.
+    :param request: Request: Request object for getting the base URL.
+    :param db: AsyncSession: Database session.
+    :return: Confirmation status.
+    """
     user = await repositories_users.get_user_by_email(body.email, db)
 
     if user.confirmed:
@@ -135,6 +178,14 @@ async def request_email(
 async def request_email(
     username: str, response: Response, db: AsyncSession = Depends(get_db)
 ):
+    """
+    Endpoint for checking if a user has opened an email.
+
+    :param username: str: Username to check.
+    :param response: Response: Response object for handling file response.
+    :param db: AsyncSession: Database session.
+    :return: File response.
+    """
     print("--------------------------------")
     print(f"{username} зберігаємо що він відкрив email в БД")
     print("--------------------------------")
