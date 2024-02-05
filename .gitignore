@@ -28,6 +28,7 @@ MANIFEST
 Include/
 lib/
 Scripts/
+postgres-data
 
 
 # PyInstaller
