@@ -1,21 +1,18 @@
-FROM python:3.10-slim
+# Встановлення базового образу Python
+FROM python:3.11-slim
 
-RUN apt-get update \
-    && apt-get install --no-cache --virtual .build-deps \
-        gcc \
-        libc-dev \
-        make \
-        libffi-dev \
-    && pip install poetry
-
-# Копіюємо файли проекту
-COPY . /app
-
-# Задаємо робочу директорію
+# Встановлення залежностей проекту та створення віртуального середовища Python
 WORKDIR /app
+COPY pyproject.toml poetry.lock /app/
+RUN pip install uvicorn
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
+RUN apt-get install --yes gcc libc-dev make libffi-dev
+RUN apt-get install
+RUN pip install poetry
+RUN uvicorn myapp:app
 
-# Встановлюємо залежності через poetry
-RUN poetry install --no-dev --no-interaction --no-ansi
+# Додавання всього іншого в проект
+COPY .  /app
 
-# Виконуємо команду для запуску сервера
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Вказання команди запуску додатку
+entrypoint ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

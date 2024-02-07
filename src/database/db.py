@@ -39,7 +39,7 @@ REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD")
 CLD_NAME = os.environ.get("CLD_NAME")
 CLD_API_KEY = os.environ.get("CLD_API_KEY")
 CLD_API_SECRET = os.environ.get("CLD_API_SECRET")
-
+ACCOUNT_EXIST = "Account already exists!"
 
 class DatabaseSessionManager:
     def __init__(self, url: str):
