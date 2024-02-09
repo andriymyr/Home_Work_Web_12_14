@@ -1,7 +1,8 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, ClassVar
 
 from pydantic import BaseModel, EmailStr, Field
+from pydantic_settings import BaseSettings
 
 from src.schemas.user import UserResponse
 
@@ -25,5 +26,5 @@ class TodoResponse(BaseModel):
     updated_at: datetime | None
     user: UserResponse | None
 
-    class Config:
-        from_attributes = True
+    class Settings(BaseSettings):
+        from_attributes: ClassVar[bool] = True

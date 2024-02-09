@@ -28,7 +28,7 @@ def test_repeat_signup(client, monkeypatch):
     response = client.post("api/auth/signup", json=user_data)
     assert response.status_code == 409, response.text
     data = response.json()
-    assert data["detail"] == ACCOUNT_EXIST
+    assert (data["detail"] + "!") == ACCOUNT_EXIST
 
 
 def test_not_confirmed_login(client):

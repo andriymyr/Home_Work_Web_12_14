@@ -1,7 +1,10 @@
 import re
+#import aioredis
+#from aioredis import Redis, StrictRedis, TimeoutError as aioTimeoutError, create_redis_pool
 from ipaddress import ip_address
 from typing import Callable
 from pathlib import Path
+
 
 import redis.asyncio as redis
 from fastapi import FastAPI, Depends, HTTPException, Request, status
@@ -59,7 +62,7 @@ async def user_agent_ban_middleware(request: Request, call_next: Callable):
     return response
 
 
-BASE_DIR = Path(".")
+BASE_DIR = Path(__file__).resolve().parent
 
 app.mount("/static", StaticFiles(directory=BASE_DIR / "src" / "static"), name="static")
 
@@ -68,13 +71,22 @@ app.include_router(users.router, prefix="/api")
 app.include_router(todos.router, prefix="/api")
 
 
+#@app.on_event("startup")
+#async def startup():
+#    r = await redis.Redis(
+#        host=REDIS_DOMAIN,
+#        port=REDIS_PORT,
+#        db=0,
+#        password=REDIS_PASSWORD,
+#    )
+#    await FastAPILimiter.init(r)
+
 @app.on_event("startup")
-async def startup():
-    r = await redis.Redis(
-        host=REDIS_DOMAIN,
-        port=REDIS_PORT,
-        db=0,
+async def startup_event():
+    r = await redis.create_redis_pool(
+        f"redis://{REDIS_DOMAIN}:{REDIS_PORT}",
         password=REDIS_PASSWORD,
+        db=0
     )
     await FastAPILimiter.init(r)
 

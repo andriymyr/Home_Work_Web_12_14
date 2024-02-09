@@ -19,9 +19,9 @@ db_port = os.environ.get("POSTGRES_PORT")
 DB_URL = (
     f"postgresql+asyncpg://{db_username}:{db_password}@{domain}:{db_port}/{db_name}"
 )
-print("*" * 60)
-print(DB_URL)
-print("*" * 60)
+#print("*" * 60)
+#print(DB_URL)
+#print("*" * 60)
 
 GSSO_CLIENT_ID = os.environ.get("GSSO_CLIENT_ID")
 GSSO_CLIENT_SECRET = os.environ.get("GSSO_CLIENT_SECRET")

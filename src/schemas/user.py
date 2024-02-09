@@ -1,6 +1,7 @@
-from typing import Optional
+from typing import Optional, ClassVar
 
 from pydantic import BaseModel, EmailStr, Field
+from pydantic_settings import BaseSettings
 
 from src.entity.models import Role
 
@@ -15,11 +16,11 @@ class UserResponse(BaseModel):
     id: int = 1
     username: str
     email: EmailStr
-    avatar: str
+    avatar: str | None
     role: Role
 
-    class Config:
-        from_attributes = True
+    class Settings(BaseSettings):
+        from_attributes: ClassVar[bool] = True
 
 
 class TokenSchema(BaseModel):
