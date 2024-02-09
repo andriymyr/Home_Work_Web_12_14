@@ -1,10 +1,11 @@
+import os
 import re
 #import aioredis
 #from aioredis import Redis, StrictRedis, TimeoutError as aioTimeoutError, create_redis_pool
 from ipaddress import ip_address
 from typing import Callable
 from pathlib import Path
-
+import uvicorn
 
 import redis.asyncio as redis
 from fastapi import FastAPI, Depends, HTTPException, Request, status
@@ -71,24 +72,24 @@ app.include_router(users.router, prefix="/api")
 app.include_router(todos.router, prefix="/api")
 
 
-#@app.on_event("startup")
-#async def startup():
-#    r = await redis.Redis(
-#        host=REDIS_DOMAIN,
-#        port=REDIS_PORT,
-#        db=0,
-#        password=REDIS_PASSWORD,
-#    )
-#    await FastAPILimiter.init(r)
-
 @app.on_event("startup")
-async def startup_event():
-    r = await redis.create_redis_pool(
-        f"redis://{REDIS_DOMAIN}:{REDIS_PORT}",
+async def startup():
+    r = await redis.Redis(
+        host=REDIS_DOMAIN,
+        port=REDIS_PORT,
+        db=0,
         password=REDIS_PASSWORD,
-        db=0
     )
     await FastAPILimiter.init(r)
+
+#@app.on_event("startup")
+#async def startup_event():
+#    r = await redis.create_redis_pool(
+#        f"redis://{REDIS_DOMAIN}:{REDIS_PORT}",
+#        password=REDIS_PASSWORD,
+#        db=0
+#    )
+#    await FastAPILimiter.init(r)
 
 
 templates = Jinja2Templates(directory=BASE_DIR / "src" / "templates")

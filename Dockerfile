@@ -7,9 +7,11 @@ COPY pyproject.toml poetry.lock /app/
 RUN pip install uvicorn
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
 RUN apt-get install --yes gcc libc-dev make libffi-dev
-RUN apt-get install
+RUN apt-get install -y libpq-dev
+#RUN apt-get install
+RUN pip install aioredis
 RUN pip install poetry
-RUN uvicorn myapp:app
+RUN poetry update
 
 # Додавання всього іншого в проект
 COPY .  /app
