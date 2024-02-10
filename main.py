@@ -7,7 +7,7 @@ from typing import Callable
 from pathlib import Path
 import uvicorn
 
-import redis.asyncio as redis
+import redis.asyncio as redis_
 from fastapi import FastAPI, Depends, HTTPException, Request, status
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -74,7 +74,7 @@ app.include_router(todos.router, prefix="/api")
 
 @app.on_event("startup")
 async def startup():
-    r = await redis.Redis(
+    r = await redis_.Redis(
         host=REDIS_DOMAIN,
         port=REDIS_PORT,
         db=0,

@@ -11,7 +11,7 @@ RUN apt-get install -y libpq-dev
 #RUN apt-get install
 RUN pip install aioredis
 RUN pip install poetry
-RUN poetry update
+RUN poetry install
 
 # Додавання всього іншого в проект
 COPY .  /app
