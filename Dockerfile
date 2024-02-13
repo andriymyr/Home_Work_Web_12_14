@@ -3,15 +3,13 @@ FROM python:3.11-slim
 
 # Встановлення залежностей проекту та створення віртуального середовища Python
 WORKDIR /app
-COPY pyproject.toml poetry.lock /app/
+COPY requirements.txt /app/
 RUN pip install uvicorn
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
 RUN apt-get install --yes gcc libc-dev make libffi-dev
 RUN apt-get install -y libpq-dev
-#RUN apt-get install
-RUN pip install aioredis
-RUN pip install poetry
-RUN poetry install
+RUN pip install -r requirements.txt
+
 
 # Додавання всього іншого в проект
 COPY .  /app

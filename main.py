@@ -1,7 +1,5 @@
 import os
 import re
-#import aioredis
-#from aioredis import Redis, StrictRedis, TimeoutError as aioTimeoutError, create_redis_pool
 from ipaddress import ip_address
 from typing import Callable
 from pathlib import Path
@@ -36,14 +34,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# @app.middleware("http")
-# async def ban_ips(request: Request, call_next: Callable):
-#     ip = ip_address(request.client.host)
-#     if ip in banned_ips:
-#         return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"detail": "You are banned"})
-#     response = await call_next(request)
-#     return response
 
 user_agent_ban_list = [r"Googlebot", r"Python-urllib"]
 
@@ -81,15 +71,6 @@ async def startup():
         password=REDIS_PASSWORD,
     )
     await FastAPILimiter.init(r)
-
-#@app.on_event("startup")
-#async def startup_event():
-#    r = await redis.create_redis_pool(
-#        f"redis://{REDIS_DOMAIN}:{REDIS_PORT}",
-#        password=REDIS_PASSWORD,
-#        db=0
-#    )
-#    await FastAPILimiter.init(r)
 
 
 templates = Jinja2Templates(directory=BASE_DIR / "src" / "templates")
